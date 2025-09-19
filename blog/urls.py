@@ -4,6 +4,7 @@ from . import views
 app_name = 'blog'
 
 urlpatterns = [
+    path('signup/', views.signup, name='signup'),
     # Página principal
     path('', views.home, name='home'),
     

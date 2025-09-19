@@ -1,6 +1,8 @@
+from django.forms import Form
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
@@ -9,6 +11,14 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView
 from .models import Post, Category, Subcategory, Comment
 from .forms import PostForm, CommentForm, SearchForm, CustomUserCreationForm
+
+
+def signup(request):
+
+    
+    
+    return render(request, 'signup.html', {'form': UserCreationForm})
+
 
 def home(request):
     """Vista principal del blog"""
