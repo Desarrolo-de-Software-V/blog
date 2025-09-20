@@ -31,4 +31,10 @@ urlpatterns = [
     
     # Registro
     path('register/', views.register, name='register'),
+    
+    # Login personalizado
+    path('login/', views.custom_login, name='login'),
+    
+    # Logout personalizado
+    path('logout/', views.custom_logout, name='logout'),
 ]
