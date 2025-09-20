@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.views import LogoutView
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import JsonResponse
@@ -374,3 +375,34 @@ def user_posts(request):
         'page_obj': page_obj,
     }
     return render(request, 'blog/user_posts.html', context)
+
+def custom_login(request):
+    """Vista personalizada para login"""
+    if request.user.is_authenticated:
+        return redirect('blog:home')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        if username and password:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'¡Bienvenido de vuelta, {user.first_name or user.username}!')
+                return redirect('blog:home')
+            else:
+                messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
+        else:
+            messages.error(request, 'Por favor, completa todos los campos.')
+    
+    return render(request, 'registration/login.html')
+
+def custom_logout(request):
+    """Vista personalizada para logout que funciona con GET y POST"""
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request, 'Has cerrado sesión correctamente.')
+    
+    # Redirigir al inicio después de mostrar la página de logout
+    return render(request, 'registration/logged_out.html')
